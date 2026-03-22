@@ -1,16 +1,38 @@
 # projeto_ebac_imc
 
-A new Flutter project.
+# 📱 Calculadora de IMC - Flutter
 
-## Getting Started
+Aplicativo desenvolvido em Flutter com foco na prática de conceitos fundamentais da framework.
 
-This project is a starting point for a Flutter application.
+## 🚀 Sobre o projeto
 
-A few resources to get you started if this is your first Flutter project:
+O app inicia através do `main()` executando o `MyApp`, que configura o `MaterialApp` com tema personalizado utilizando `ColorScheme.fromSeed`.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+A tela inicial é definida como `ImcPage`, onde será implementada a lógica de cálculo do IMC.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+O código também contém a estrutura padrão `MyHomePage`, demonstrando:
+
+- Uso de `StatefulWidget`
+- Gerenciamento de estado com `setState`
+- Estrutura básica de `Scaffold`
+- `AppBar`
+- `FloatingActionButton`
+- Atualização dinâmica da interface
+
+## 🛠 Tecnologias utilizadas
+
+- Flutter
+- Dart
+- Material Design
+
+## 🎯 Objetivo
+
+Praticar conceitos fundamentais como:
+- Estrutura de widgets
+- Gerenciamento de estado
+- Organização de projeto
+- Separação de responsabilidades (view)
+
+---
+
+Projeto desenvolvido para fins de aprendizado.
