@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import  'package:projeto_ebac_imc/controller/controller_imc.dart';
 
 class ImcPage extends StatefulWidget {
   const ImcPage({super.key});
@@ -9,11 +9,25 @@ class ImcPage extends StatefulWidget {
 }
 
 class _ImcPageState extends State<ImcPage> {
+
+ImcController imcController = ImcController();
+
+
+@override
+void dispose() {
+  imcController.pesoController.dispose();
+  imcController.alturaController.dispose();
+  super.dispose();
+}
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 148, 0, 0),
+        backgroundColor: Colors.amber,
         title: const Text('IMC'),
          ),
 
@@ -28,10 +42,11 @@ body: Padding(
      children:  [
       Expanded(
        child:  TextField(
-        //*inputFormatters: [
-       //*   FilteringTextInputFormatter.allow(RegExp('[0-9,]')),
+        controller: imcController.pesoController,
+       //* inputFormatters: [
+      //*   FilteringTextInputFormatter.allow(RegExp('[0-9,]')),
       //*  ],
-      keyboardType: TextInputType.numberWithOptions(decimal: true),
+      keyboardType: const TextInputType.numberWithOptions(decimal: true),
         decoration: InputDecoration(
           //* isDense deixa o campo mais compacto, reduzindo a altura do TextField
           isDense: true,
@@ -40,12 +55,12 @@ body: Padding(
          //* contentPadding é o espaçamento interno do TextField
          contentPadding: EdgeInsets.all(8) ,
         
-          label: Text('Peso', style: TextStyle(color: Colors.red )),
+          label: Text('Peso', style: TextStyle(color: Colors.amber)),
          
           suffixIcon: Icon(Icons.height),
           prefix: Text( "P - "),
           hintText: 'Digite seu peso',
-          hintStyle: TextStyle(color: Colors.red, fontStyle: FontStyle.italic),
+          hintStyle: TextStyle(color: Colors.amber, fontStyle: FontStyle.italic),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(30)
@@ -55,15 +70,10 @@ body: Padding(
          ),
 ),
 ),
-],   
-),
-
+     ],
+    ),
+   
 //* SizedBox ele cria um espaço entre o textfield e o botão, para deixar a interface mais agradável
-
-
-
-
-
 
 const SizedBox(
   height: 20,
@@ -72,9 +82,11 @@ const SizedBox(
  
  Expanded(
        child: TextField(
-       //* inputFormatters: [
-        //*  FilteringTextInputFormatter.allow(RegExp('[0-9,]')),
-       //* ],
+        controller: imcController.alturaController,
+
+     //*   inputFormatters: [
+   //*    FilteringTextInputFormatter.allow(RegExp('[0-9,]')),
+     //*   ],
 
       keyboardType: TextInputType.numberWithOptions(decimal:true),
         decoration: InputDecoration(
@@ -85,12 +97,12 @@ const SizedBox(
          //* contentPadding é o espaçamento interno do TextField
          contentPadding: EdgeInsets.all(8) ,
         
-          label: Text('Altura', style: TextStyle(color: Colors.red )),
+          label: Text('Altura', style: TextStyle(color: Colors.amber )),
          
           suffixIcon: Icon(Icons.height),
           prefix: Text( "A - "),
           hintText: 'Digite sua altura',
-          hintStyle: TextStyle(color: Colors.red, fontStyle: FontStyle.italic),
+          hintStyle: TextStyle(color: Colors.amber, fontStyle: FontStyle.italic),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(30)
@@ -111,15 +123,72 @@ Row(
     Expanded(child:
     Padding(
       padding: const EdgeInsets.symmetric(vertical : 16.0),
-      child: ElevatedButton(onPressed:  (){
-        debugPrint('IMC ...');
-      },
-       child:  const Text('Processar IMC',
-        style: TextStyle(
-        color: Color.fromARGB(255, 255, 0, 0)
+      child: ValueListenableBuilder<bool>(
+        valueListenable: imcController.botaoProcessar,
+        builder:(context, value, _) {
+        return ElevatedButton(
+          onPressed: 
+          !value 
+          ? null : (){
+        showDialog(context:context,
+        //* barrierDismissible: false, para não fechar o dialog quando clicar fora dele, obrigando o usuário a clicar no botão para fechar o dialog
+        barrierDismissible: false,
+         builder: (context){
+        
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(32))
           ),
-          )
+         
+        titlePadding: const EdgeInsets.symmetric(horizontal: 0),
+        titleTextStyle: const TextStyle( color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),
+        title: Container (
+        height: 60,
+        decoration:  const BoxDecoration(
+        color: Colors.amber,
+        borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(32), topRight: Radius.circular(32)),
+            
+        ),
+         child:const Center(child:
+          Text('Resultado IMC')),
+        ),
+          content: Column (
+           mainAxisAlignment: MainAxisAlignment.center,
+           mainAxisSize: MainAxisSize.min, 
+            children: [
+        Text('Peso:  ${imcController.pesoController.text} '),
+        Text('Altura: ${imcController.alturaController.text} '),
+          ]
           ),
+        
+        actions: [
+          TextButton(
+            onPressed: () {
+            Navigator.of(context).pop('Fechando a tela');
+            FocusManager.instance.primaryFocus
+         ?.unfocus(); 
+          },
+         
+          child:const Icon(Icons.close)),
+        ],
+        
+        
+        
+        
+        );
+        });
+         
+        },
+         child:  const Text('Processar IMC',
+          style: TextStyle(
+          color: Colors.amber
+            ),
+            )
+            );
+        },
+         
+      ),
     )
         ),
   ],

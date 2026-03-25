@@ -1,11 +1,18 @@
 class IMC {
   final double altura;
   final double peso;
+  String mensagem = '';
 
-  IMC( this.altura,  this.peso);
+
+
+IMC({required this.peso, required this.altura, required this.mensagem});
 
   factory IMC.fromJson(Map json){
-     return IMC(json['altura'], json['peso']);
+     return IMC(
+      peso: json['peso'],
+      altura: json['altura'],
+      mensagem: json['mensagem'] ?? ''
+    );
 
 
   }
@@ -14,7 +21,7 @@ class IMC {
 @override
 String toString(){
 return
-'Altura: $altura, Peso: $peso';
+'Altura: $altura, Peso: $peso, Mensagem: $mensagem';
  }
 }
 
