@@ -1,14 +1,14 @@
-class IMC {
+class ImcModel {
   final double altura;
   final double peso;
   String mensagem = '';
 
 
 
-IMC({required this.peso, required this.altura, required this.mensagem});
+ImcModel({required this.peso, required this.altura, required this.mensagem});
 
-  factory IMC.fromJson(Map json){
-     return IMC(
+  factory ImcModel.fromJson(Map json){
+     return ImcModel(
       peso: json['peso'],
       altura: json['altura'],
       mensagem: json['mensagem'] ?? ''
