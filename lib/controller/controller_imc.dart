@@ -78,11 +78,11 @@ if (valorIMC >= 16 && valorIMC < 17){
     return 'baixo peso, grave';
   }
 
-if (valorIMC >= 17 && valorIMC <= 18.5){
+if (valorIMC >= 17 && valorIMC <= 18.49){
   return 'peso baixo';
 }
 
-if (valorIMC >= 18.5 && valorIMC <=25){
+if (valorIMC >= 18.5 && valorIMC <=24.9){
   return 'peso ideal';
 }
 
