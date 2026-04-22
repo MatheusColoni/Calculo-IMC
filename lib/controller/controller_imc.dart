@@ -61,6 +61,11 @@ double _calcularIMC(){
 try{
 double pesoIMC = double.parse(pesoController.value.text.replaceAll(',', '.'));
 double alturaIMC = double.parse(alturaController.value.text.replaceAll(',', '.'));
+
+if(alturaIMC <= 0){
+  return -999;
+}
+
 double valorIMC = pesoIMC / (alturaIMC * alturaIMC);
 return valorIMC;
 
@@ -78,11 +83,11 @@ if (valorIMC >= 16 && valorIMC < 17){
     return 'baixo peso, grave';
   }
 
-if (valorIMC >= 17 && valorIMC <= 18.49){
+if (valorIMC >= 17 && valorIMC < 18.5){
   return 'peso baixo';
 }
 
-if (valorIMC >= 18.5 && valorIMC <=24.9){
+if (valorIMC >= 18.5 && valorIMC < 24.9){
   return 'peso ideal';
 }
 
@@ -97,6 +102,8 @@ if(valorIMC >= 30 && valorIMC < 35){
 if(valorIMC >= 35 && valorIMC < 40){
   return 'obesidade grau 2';
 }
+
+
 
 return 'obesidade grau 3 (obesidade mórbida) = maior que 40kg/m2';
 
