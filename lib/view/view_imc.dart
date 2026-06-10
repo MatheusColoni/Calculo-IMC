@@ -9,14 +9,30 @@ class ImcPage extends StatefulWidget {
   State<ImcPage> createState() => _ImcPageState();
 }
 
-class _ImcPageState extends State<ImcPage> {
+class _ImcPageState extends State<ImcPage> with SingleTickerProviderStateMixin {
+final Duration _duration = const Duration(seconds:1);
 ImcController imcController = ImcController();
+late Animation<Alignment> _alignmentAnimation;
+late AnimationController _animationController;
+
+
+
+
+
+@override
+void initState(){
+  super.initState();
+  _animationController = AnimationController(vsync: this,duration: _duration,);
+   _alignmentAnimation = Tween<Alignment> ( begin: Alignment.center, end: Alignment.topCenter ). animate (_animationController);
+}
+
 
 
 @override
 void dispose() {
   imcController.pesoController.dispose();
   imcController.alturaController.dispose();
+  _animationController.dispose();
   super.dispose();
 }
 
@@ -32,63 +48,54 @@ void dispose() {
 body: Padding(
   padding: const EdgeInsets.all(16.0),
   child: Column(
-   
    children: [
     Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children:  [
-    
-    Expanded(
-    child:  TextField(
-    controller: imcController.pesoController,
-    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-    decoration: InputDecoration(
-    isDense: true,
-    filled: true,
-    contentPadding: EdgeInsets.all(8) ,
-    label: Text('Peso', style: TextStyle(color: Colors.blue)),
-    suffixIcon: Icon(Icons.height),
-    prefix: Text( "P - "),
-    hintText: 'Digite seu peso',
-    hintStyle: TextStyle(color: Colors.blue, fontStyle: FontStyle.italic),
-    border: OutlineInputBorder(
-    borderRadius: BorderRadius.all(
-    Radius.circular(30)
-    ),
-    ), 
-    ),
-    ),
-    ),
-    ],
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Expanded(
+          child: TextField(
+            controller: imcController.pesoController,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            decoration: InputDecoration(
+              isDense: true,
+              filled: true,
+              contentPadding: EdgeInsets.all(8),
+              label: Text('Peso', style: TextStyle(color: Colors.blue)),
+              suffixIcon: Icon(Icons.height),
+              prefix: Text("P - "),
+              hintText: 'Digite seu peso',
+              hintStyle: TextStyle(color: Colors.blue, fontStyle: FontStyle.italic),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+              ),
+            ),
+          ),
+        ),
+      ],
     ),
 
   const SizedBox(
-  height: 20,
+  height: 10,
 ),
  
  
-  Expanded(
-  child: TextField(
-  controller: imcController.alturaController,
-  keyboardType: TextInputType.numberWithOptions(decimal:true),
-  decoration: InputDecoration(
-  isDense: true,
-  filled: true,
-  contentPadding: EdgeInsets.all(8) ,
-  label: Text('Altura', style: TextStyle(color: Colors.blue )),
-  suffixIcon: Icon(Icons.height),
-  prefix: Text( "A - "),
-  hintText: 'Digite sua altura',
-  hintStyle: TextStyle(color: Colors.blue, fontStyle: FontStyle.italic),
-  border: OutlineInputBorder(
-  borderRadius: BorderRadius.all(
-  Radius.circular(30)
-              
-),
-), 
-),
-),
-),
+  TextField(
+    controller: imcController.alturaController,
+    keyboardType: TextInputType.numberWithOptions(decimal: true),
+    decoration: InputDecoration(
+      isDense: true,
+      filled: true,
+      contentPadding: EdgeInsets.all(8),
+      label: Text('Altura', style: TextStyle(color: Colors.blue)),
+      suffixIcon: Icon(Icons.height),
+      prefix: Text("A - "),
+      hintText: 'Digite sua altura',
+      hintStyle: TextStyle(color: Colors.blue, fontStyle: FontStyle.italic),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.all(Radius.circular(30)),
+      ),
+    ),
+  ),
 
 
 const SizedBox(
@@ -107,108 +114,14 @@ height: 5,
   onPressed: 
   !value 
   ? null : (){
-  showDialog(context:context,
-  builder: (context){
-    ImcModel imcModel = imcController.processarIMC( 
-    );
-        
-
- return AlertDialog(
- shape: const RoundedRectangleBorder(
- borderRadius: BorderRadius.all(Radius.circular(32))
-          ),
-         
-  titlePadding: const EdgeInsets.symmetric(horizontal: 0),
-  titleTextStyle: const TextStyle( color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),
-  title:  const AlertTitle(),
-  content: imcController.resultadoIMC == -999 ?
- Center(
-    heightFactor: 3,
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      children: const [
-        Icon(
-          Icons.warning,
-           color: Colors.orange,
-            size: 30),
-        Padding(
-          padding: EdgeInsets.only(top: 8.0),
-          child: Text('VERIFIQUE OS CAMPOS DE PESO E ALTURA'),
-        ),
-      ],
-    ),
-  ) 
-  : Column (
-  mainAxisAlignment: MainAxisAlignment.center,
-  mainAxisSize: MainAxisSize.min, 
- 
-  children: [
-        
-  PesoCaracteristicas(
-  icon: Icon(
-  Icons.person,
-  color: Colors.blue,
-    size: 30,),
-  descricao: 'Peso:',
-  valorImc: imcModel.peso,
- ),
-     
-   Divider(height: 1, color: Colors.yellow) ,
-     
-  AlturaCaracteristicas(
-  icon: Icon(
-  Icons.accessibility_new,
-  color: Colors.blue,
-  size: 30,
-  ),
-  descricao:' Altura:',
-  valorImc: imcModel.altura,
-  ),
+    if (_alignmentAnimation.value == Alignment.center){
+    _animationController.forward();
+    }else{
+      _animationController.reverse();
+    
+    }
   
-   Divider(height: 1, color: Colors.yellow) ,
-
- ImcValor(
-  icon: Icon(
-  Icons.show_chart_outlined,
-  color: Colors.blue,
-  size: 30,
-  ),
-  descricao:' IMC:',
-  valorImc: imcController.resultadoIMC,
- ),
-
-
-MensagemIMC(imcModel: imcModel)
-
-
-    ]
-    ),
-
-
-
-
-
-        
- actions: [
- TextButton(
-  style: ButtonStyle(
-    // ignore: deprecated_member_use
-    backgroundColor: MaterialStateProperty.all(Colors.blue)
-  ),
- onPressed: () {
- Navigator.of(context).pop('Fechando a tela');
- FocusManager.instance.primaryFocus
- ?.unfocus(); 
-          },
-         
- child:const Icon(Icons.close)),
-        ],
-        
-        
-        
-        
-        );
-        });
+  callShowDialog(context);
         },
 
  child:  const Text('Processar IMC',
@@ -229,7 +142,22 @@ MensagemIMC(imcModel: imcModel)
        ),
 
 
-
+AnimatedBuilder(
+  animation: _animationController,
+  builder: (context, child) { 
+  return Align(
+    alignment: _alignmentAnimation.value,
+    child: Container(
+      decoration: BoxDecoration(
+      color: const Color.fromARGB(255, 0, 102, 255),
+      shape: BoxShape.circle,
+      ),
+      height: 300,
+      width: 300,
+    ),
+  );
+  },
+  ),
 ],
 ),
 ),
@@ -238,6 +166,112 @@ MensagemIMC(imcModel: imcModel)
   
   
 }
+
+ void callShowDialog(BuildContext context) {
+    showDialog(context:context,
+   builder: (context){
+     ImcModel imcModel = imcController.processarIMC( 
+     );
+         
+   
+    return AlertDialog(
+    shape: const RoundedRectangleBorder(
+    borderRadius: BorderRadius.all(Radius.circular(32))
+           ),
+          
+   titlePadding: const EdgeInsets.symmetric(horizontal: 0),
+   titleTextStyle: const TextStyle( color: Colors.blue, fontSize: 20, fontWeight: FontWeight.bold),
+   title:  const AlertTitle(),
+   content: imcController.resultadoIMC == -999 ?
+    Center(
+     heightFactor: 3,
+     child: Column(
+       mainAxisSize: MainAxisSize.min,
+       children: const [
+         Icon(
+           Icons.warning,
+            color: Colors.orange,
+             size: 30),
+         Padding(
+           padding: EdgeInsets.only(top: 8.0),
+           child: Text('VERIFIQUE OS CAMPOS DE PESO E ALTURA'),
+         ),
+       ],
+     ),
+   ) 
+   : Column (
+   mainAxisAlignment: MainAxisAlignment.center,
+   mainAxisSize: MainAxisSize.min, 
+    
+   children: [
+         
+   PesoCaracteristicas(
+   icon: Icon(
+   Icons.person,
+   color: Colors.blue,
+     size: 30,),
+   descricao: 'Peso:',
+   valorImc: imcModel.peso,
+    ),
+      
+    Divider(height: 1, color: Colors.yellow) ,
+      
+   AlturaCaracteristicas(
+   icon: Icon(
+   Icons.accessibility_new,
+   color: Colors.blue,
+   size: 30,
+   ),
+   descricao:' Altura:',
+   valorImc: imcModel.altura,
+   ),
+   
+    Divider(height: 1, color: Colors.yellow) ,
+   
+    ImcValor(
+   icon: Icon(
+   Icons.show_chart_outlined,
+   color: Colors.blue,
+   size: 30,
+   ),
+   descricao:' IMC:',
+   valorImc: imcController.resultadoIMC,
+    ),
+   
+   
+   MensagemIMC(imcModel: imcModel)
+   
+   
+     ]
+     ),
+   
+   
+   
+   
+   
+         
+    actions: [
+    TextButton(
+   style: ButtonStyle(
+     // ignore: deprecated_member_use
+     backgroundColor: MaterialStateProperty.all(Colors.blue)
+   ),
+    onPressed: () {
+    Navigator.of(context).pop('Fechando a tela');
+    FocusManager.instance.primaryFocus
+    ?.unfocus(); 
+           },
+          
+    child:const Icon(Icons.close)),
+         ],
+         
+         
+         
+         
+         );
+         });
+         
+ }
 }
 
 class MensagemIMC extends StatelessWidget {
