@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:projeto_ebac_imc/controller/controller_imc.dart';
 import 'package:projeto_ebac_imc/model/model_imc.dart';
+import 'package:lottie/lottie.dart';
+
+
 
 class ImcPage extends StatefulWidget {
   const ImcPage({super.key});
@@ -24,14 +27,14 @@ class _ImcPageState extends State<ImcPage> with SingleTickerProviderStateMixin {
       duration: _duration,
     );
 
-_animationController.addListener(() async {
-  if(_animationController.status == AnimationStatus.completed){
-    await Future.delayed(_duration);
-    _animationController.reverse();
-    await Future.delayed(_duration);
-    callShowDialog(context);
-  }
-});
+    _animationController.addListener(() async {
+      if (_animationController.status == AnimationStatus.completed) {
+        await Future.delayed(_duration);
+        _animationController.reverse();
+        await Future.delayed(_duration);
+        callShowDialog(context);
+      }
+    });
 
     _alignmentAnimation = Tween<Alignment>(
       begin: Alignment.bottomCenter,
@@ -41,10 +44,6 @@ _animationController.addListener(() async {
       begin: Size(0, 0),
       end: const Size(300, 300),
     ).animate(_animationController);
-
-
-
-
   }
 
   @override
@@ -143,17 +142,11 @@ _animationController.addListener(() async {
                         onPressed: !value
                             ? null
                             : () {
-                                    _animationController.forward();
-                               // if (_animationController.status ==
-                                 //       AnimationStatus.dismissed ||
-                                  //  _animationController.status ==
-                                 //       AnimationStatus.reverse) {
-                                //  _animationController.forward(); // ⬆️ sobe
-                               // } else {
-                               //   _animationController.reverse(); // ⬇️ desce
-                                },
-      
-                             // },
+                                _animationController.forward();
+                              
+                              },
+
+                      
                         child: const Text(
                           'Processar IMC',
                           style: TextStyle(color: Colors.amber),
@@ -178,7 +171,8 @@ _animationController.addListener(() async {
                       ),
                       height: _sizeAnimation.value.width,
                       width: _sizeAnimation.value.height,
-                      child: Icon(Icons.check, size: _sizeAnimation.value.width, color: Colors.white),
+                      child: Lottie.asset('assets/Spin.json'),
+                    
                     ),
                   );
                 },
