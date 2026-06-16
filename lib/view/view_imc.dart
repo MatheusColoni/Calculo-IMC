@@ -23,6 +23,16 @@ class _ImcPageState extends State<ImcPage> with SingleTickerProviderStateMixin {
       vsync: this,
       duration: _duration,
     );
+
+_animationController.addListener(() async {
+  if(_animationController.status == AnimationStatus.completed){
+    await Future.delayed(_duration);
+    _animationController.reverse();
+    await Future.delayed(_duration);
+    callShowDialog(context);
+  }
+});
+
     _alignmentAnimation = Tween<Alignment>(
       begin: Alignment.bottomCenter,
       end: Alignment.topCenter,
@@ -31,6 +41,10 @@ class _ImcPageState extends State<ImcPage> with SingleTickerProviderStateMixin {
       begin: Size(0, 0),
       end: const Size(300, 300),
     ).animate(_animationController);
+
+
+
+
   }
 
   @override
@@ -129,16 +143,17 @@ class _ImcPageState extends State<ImcPage> with SingleTickerProviderStateMixin {
                         onPressed: !value
                             ? null
                             : () {
-                                if (_animationController.status ==
-                                        AnimationStatus.dismissed ||
-                                    _animationController.status ==
-                                        AnimationStatus.reverse) {
-                                  _animationController.forward(); // ⬆️ sobe
-                                } else {
-                                  _animationController.reverse(); // ⬇️ desce
-                                }
-                                //*  callShowDialog(context);
-                              },
+                                    _animationController.forward();
+                               // if (_animationController.status ==
+                                 //       AnimationStatus.dismissed ||
+                                  //  _animationController.status ==
+                                 //       AnimationStatus.reverse) {
+                                //  _animationController.forward(); // ⬆️ sobe
+                               // } else {
+                               //   _animationController.reverse(); // ⬇️ desce
+                                },
+      
+                             // },
                         child: const Text(
                           'Processar IMC',
                           style: TextStyle(color: Colors.amber),
@@ -163,7 +178,7 @@ class _ImcPageState extends State<ImcPage> with SingleTickerProviderStateMixin {
                       ),
                       height: _sizeAnimation.value.width,
                       width: _sizeAnimation.value.height,
-                      child: Icon(Icons.check, size: 100, color: Colors.white),
+                      child: Icon(Icons.check, size: _sizeAnimation.value.width, color: Colors.white),
                     ),
                   );
                 },
