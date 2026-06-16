@@ -86,19 +86,25 @@ void main() {
     });
 
     // Limites das demais faixas que não foram alteradas.
-    test('IMC = 17.0 exato retorna "peso baixo" (limite inferior inalterado)', () {
-      // peso=52.06 / (1.75²=3.0625) ≈ 16.999 → arredonda para 17.00
-      controller.pesoController.text = '52.06';
-      controller.alturaController.text = '1.75';
-      expect(controller.processarIMC().mensagem, 'peso baixo');
-    });
+    test(
+      'IMC = 17.0 exato retorna "peso baixo" (limite inferior inalterado)',
+      () {
+        // peso=52.06 / (1.75²=3.0625) ≈ 16.999 → arredonda para 17.00
+        controller.pesoController.text = '52.06';
+        controller.alturaController.text = '1.75';
+        expect(controller.processarIMC().mensagem, 'peso baixo');
+      },
+    );
 
-    test('IMC = 16.0 exato retorna "baixo peso, grave" (limite inferior inalterado)', () {
-      // peso=49.0 / (1.75²) ≈ 16.0
-      controller.pesoController.text = '49.0';
-      controller.alturaController.text = '1.75';
-      expect(controller.processarIMC().mensagem, 'baixo peso, grave');
-    });
+    test(
+      'IMC = 16.0 exato retorna "baixo peso, grave" (limite inferior inalterado)',
+      () {
+        // peso=49.0 / (1.75²) ≈ 16.0
+        controller.pesoController.text = '49.0';
+        controller.alturaController.text = '1.75';
+        expect(controller.processarIMC().mensagem, 'baixo peso, grave');
+      },
+    );
   });
 
   // ── commit 008bae1 ────────────────────────────────────────────────────────
