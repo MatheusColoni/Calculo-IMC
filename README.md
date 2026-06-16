@@ -18,12 +18,15 @@ O código também contém a estrutura padrão `MyHomePage`, demonstrando:
 - `AppBar`
 - `FloatingActionButton`
 - Atualização dinâmica da interface
+- Animações utilizando Lottie
+- Gerenciamento de Animações
 
 ## 🛠 Tecnologias utilizadas
 
 - Flutter
 - Dart
 - Material Design
+- Lottie
 
 ## 🎯 Objetivo
 
@@ -32,6 +35,7 @@ Praticar conceitos fundamentais como:
 - Gerenciamento de estado
 - Organização de projeto
 - Separação de responsabilidades (view)
+- Animações Implicitas 
 
 ---
 
