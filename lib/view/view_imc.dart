@@ -10,9 +10,10 @@ class ImcPage extends StatefulWidget {
 }
 
 class _ImcPageState extends State<ImcPage> with SingleTickerProviderStateMixin {
-  final Duration _duration = const Duration(seconds: 1);
+  final Duration _duration = const Duration(milliseconds: 1000);
   ImcController imcController = ImcController();
   late Animation<Alignment> _alignmentAnimation;
+  late Animation<Size> _sizeAnimation;
   late AnimationController _animationController;
 
   @override
@@ -23,8 +24,12 @@ class _ImcPageState extends State<ImcPage> with SingleTickerProviderStateMixin {
       duration: _duration,
     );
     _alignmentAnimation = Tween<Alignment>(
-      begin: Alignment.center,
+      begin: Alignment.bottomCenter,
       end: Alignment.topCenter,
+    ).animate(_animationController);
+    _sizeAnimation = Tween(
+      begin: Size(0, 0),
+      end: const Size(300, 300),
     ).animate(_animationController);
   }
 
@@ -45,11 +50,10 @@ class _ImcPageState extends State<ImcPage> with SingleTickerProviderStateMixin {
       ),
 
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: TextField(
@@ -75,83 +79,95 @@ class _ImcPageState extends State<ImcPage> with SingleTickerProviderStateMixin {
                     ),
                   ),
                 ),
+                const SizedBox(
+                  width: 10,
+                ), // <-- espaço HORIZONTAL entre os campos
+                Expanded(
+                  child: TextField(
+                    controller: imcController.alturaController,
+                    keyboardType: TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    decoration: InputDecoration(
+                      isDense: true,
+                      filled: true,
+                      contentPadding: EdgeInsets.all(8),
+                      label: Text(
+                        'Altura',
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                      suffixIcon: Icon(Icons.height),
+                      prefix: Text("A - "),
+                      hintText: 'Digite sua altura',
+                      hintStyle: TextStyle(
+                        color: Colors.blue,
+                        fontStyle: FontStyle.italic,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(30)),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
-
-            const SizedBox(height: 10),
-
-            TextField(
-              controller: imcController.alturaController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
-              decoration: InputDecoration(
-                isDense: true,
-                filled: true,
-                contentPadding: EdgeInsets.all(8),
-                label: Text('Altura', style: TextStyle(color: Colors.blue)),
-                suffixIcon: Icon(Icons.height),
-                prefix: Text("A - "),
-                hintText: 'Digite sua altura',
-                hintStyle: TextStyle(
-                  color: Colors.blue,
-                  fontStyle: FontStyle.italic,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(30)),
-                ),
-              ),
-            ),
-
             const SizedBox(height: 5),
 
             Row(
               children: [
                 Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: ValueListenableBuilder<bool>(
-                      valueListenable: imcController.botaoProcessar,
-                      builder: (context, value, _) {
-                        return ElevatedButton(
-                          onPressed: !value
-                              ? null
-                              : () {
-                                  if (_alignmentAnimation.value ==
-                                      Alignment.center) {
-                                    _animationController.forward();
-                                  } else {
-                                    _animationController.reverse();
-                                  }
-
-                                  callShowDialog(context);
-                                },
-
-                          child: const Text(
-                            'Processar IMC',
-                            style: TextStyle(color: Colors.amber),
+                  child: ValueListenableBuilder<bool>(
+                    valueListenable: imcController.botaoProcessar,
+                    builder: (context, value, _) {
+                      return ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(44),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                        onPressed: !value
+                            ? null
+                            : () {
+                                if (_animationController.status ==
+                                        AnimationStatus.dismissed ||
+                                    _animationController.status ==
+                                        AnimationStatus.reverse) {
+                                  _animationController.forward(); // ⬆️ sobe
+                                } else {
+                                  _animationController.reverse(); // ⬇️ desce
+                                }
+                                //*  callShowDialog(context);
+                              },
+                        child: const Text(
+                          'Processar IMC',
+                          style: TextStyle(color: Colors.amber),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],
             ),
 
-            AnimatedBuilder(
-              animation: _animationController,
-              builder: (context, child) {
-                return Align(
-                  alignment: _alignmentAnimation.value,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 0, 102, 255),
-                      shape: BoxShape.circle,
+            Expanded(
+              child: AnimatedBuilder(
+                animation: _animationController,
+                builder: (context, child) {
+                  return Align(
+                    alignment: _alignmentAnimation.value,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 0, 102, 255),
+                        shape: BoxShape.circle,
+                      ),
+                      height: _sizeAnimation.value.width,
+                      width: _sizeAnimation.value.height,
+                      child: Icon(Icons.check, size: 100, color: Colors.white),
                     ),
-                    height: 300,
-                    width: 300,
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
           ],
         ),
